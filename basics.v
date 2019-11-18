@@ -397,7 +397,7 @@ Proof.
   rewrite -> plus_O_n.
   reflexivity. Qed.
 
-(* Exercise: 6. standard (mult S 1) *)
+(* Exercise: 6. standard (mult_S_1) *)
 
 Theorem mult_S_1 : forall n m : nat,
   m = S n ->
@@ -408,3 +408,102 @@ Proof.
   rewrite -> H.
   reflexivity. Qed.
 
+(** Proof by Case Analysis (Proof by exhaustion) *)
+
+Theorem plus_1_neq_0_firsttry : forall n : nat,
+  (n + 1) =? 0 = false.
+Proof.
+  intros n.
+  simpl.
+Abort.
+
+(* destruct generates two subgoals *)
+Theorem plus_1_new_0 : forall n : nat,
+  (n + 1) =? 0 = false.
+Proof.
+  intros n. destruct n as [| n'] eqn:E.
+  - reflexivity.
+  - reflexivity. Qed.
+
+(* involution = function that is its own inverse *)
+Theorem negb_involutive : forall b : bool,
+  negb (negb b) = b.
+Proof.
+  intros b. destruct b eqn:E.
+  - reflexivity.
+  - reflexivity. Qed.
+
+Theorem andb_commutative : forall b c, andb b c = andb c b.
+Proof.
+  intros b c. destruct b eqn:Eb.
+  - destruct c eqn:Ec.
+    + reflexivity.
+    + reflexivity.
+  - destruct c eqn:Ec.
+    + reflexivity.
+    + reflexivity.
+Qed.
+
+Theorem andb3_exchange :
+  forall b c d, andb (andb b c) d = andb (andb b d) c.
+Proof.
+  intros b c d. destruct b eqn:Eb.
+  - destruct c eqn:Ec.
+    { destruct d eqn:Ed.
+      - reflexivity.
+      - reflexivity. }
+    { destruct d eqn:Ed.
+      - reflexivity.
+      - reflexivity. }
+  - destruct c eqn:Ec.
+    { destruct d eqn:Ed.
+      - reflexivity.
+      - reflexivity. }
+    { destruct d eqn:Ed.
+      - reflexivity.
+      - reflexivity. }
+Qed.
+
+Theorem plus_1_neq_0' : forall n : nat,
+  (n + 1) =? 0 = false.
+Proof.
+  intros [|n].
+  - reflexivity.
+  - reflexivity. Qed.
+
+Theorem andb_commutative'' :
+  forall b c, andb b c = andb c b.
+Proof.
+  intros [] [].
+  - reflexivity.
+  - reflexivity.
+  - reflexivity.
+  - reflexivity.
+Qed.
+
+(* Exercise: 7. standard (andb_true_elim2) *)
+
+Theorem andb_true_elim2 : forall b c : bool,
+  andb b c = true -> c = true.
+Proof.
+intros b c H.
+destruct b.
+  destruct c.
+    reflexivity.
+    rewrite <- H.
+    reflexivity.
+  destruct c.
+    reflexivity.
+    rewrite <- H.
+    reflexivity.
+Qed.
+
+(* Exercise: 8. standard (zero_nbeq_plus_1) *)
+
+Theorem zero_nbeq_plus_1 : forall n : nat,
+  0 =? (n + 1) = false.
+Proof.
+  intros [].
+    reflexivity.
+    reflexivity.
+Qed.
