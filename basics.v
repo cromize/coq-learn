@@ -357,3 +357,80 @@ Proof.
     reflexivity.
     reflexivity.
 Qed.
+
+(* Exercise: 9. standard (identity_fn_applied_twice) *)
+
+Theorem identity_fn_applied_twice :
+  forall (f : bool -> bool),
+  (forall (x : bool), f x = x) ->
+  forall (b : bool), f (f b) = b.
+Proof.
+  intros f H b.
+  rewrite H. rewrite H.
+  reflexivity.
+Qed.
+
+(* Exercise: 10. standard (negation_fn_applied_twice) *)
+
+Theorem negation_fn_applied_twice :
+  forall (f : bool -> bool),
+  (forall (x : bool), f x = negb x) ->
+  forall (b : bool), f (f b) = b.
+Proof.
+  intros f H b.
+  rewrite H. rewrite H.
+  rewrite negb_involutive.
+  reflexivity.
+Qed.
+
+(* Exercise: 11. standard, optional (andb_eq_orb) *)
+
+Theorem andb_eq_orb :
+  forall (b c : bool),
+  (andb b c = orb b c) ->
+  b = c.
+Proof.
+  intros b c. destruct b.
+    simpl.
+    intros H.
+    rewrite H.
+    reflexivity.
+
+    simpl.
+    intros H.
+    rewrite H.
+    reflexivity.
+Qed.
+
+(* Exercise: 12. standard (binary) *)
+
+Inductive bin : Type :=
+  | Z
+  | A (n : bin)
+  | B (n : bin).
+
+(*
+
+Fixpoint incr (m : bin) : bin :=
+  match m with
+  | Z => B Z
+  | A Z => Z
+  | B Z => A (B Z)
+  | A (B Z) => B (B Z)
+  | B (B n') => A (A (B n'))
+  | B (A n') => A (B n')
+  | A (A m') => B (A m')
+  | A (B m') => B (B m')
+  end.
+
+Compute Z.
+Compute incr Z.
+Compute (incr (incr Z)).
+Compute (incr (incr (incr Z))).
+Compute (incr (incr (incr (incr Z)))).
+Compute (incr (incr (incr (incr (incr Z))))).
+Compute (incr (incr (incr (incr (incr (incr Z)))))).
+Compute (incr (incr (incr (incr (incr (incr (incr Z))))))).
+Compute (incr (incr (incr (incr (incr (incr (incr (incr Z)))))))).
+*)
+
