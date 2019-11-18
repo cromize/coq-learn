@@ -1,29 +1,5 @@
 (* https://softwarefoundations.cis.upenn.edu/lf-current/Basics.html *)
 
-Inductive day : Type :=
-  | monday
-  | tuesday
-  | wednesday
-  | thursday
-  | friday
-  | saturday
-  | sunday.
-
-Definition next_weekday (d : day) : day :=
-  match d with
-  | monday => tuesday
-  | tuesday => wednesday
-  | wednesday => thursday
-  | thursday => friday
-  | friday => monday
-  | saturday => monday
-  | sunday => monday
-  end.
-
-Example test_next_weekday:
-  (next_weekday (next_weekday saturday)) = tuesday.
-Proof. simpl. reflexivity. Qed.
-
 (** Boolean Logic *)
 
 Inductive bool : Type :=
@@ -48,89 +24,22 @@ Definition orb (b1 : bool) (b2 : bool) : bool :=
   | false => b2
   end.
 
-(* Truth table for OR *)
-Example test_orb1: (orb true false) = true.
-Proof. simpl. reflexivity. Qed.
-
-Example test_orb2: (orb false false) = false.
-Proof. simpl. reflexivity. Qed.
-
-Example test_orb3: (orb false true) = true.
-Proof. simpl. reflexivity. Qed.
-
-Example test_orb4: (orb true true) = true.
-Proof. simpl. reflexivity. Qed.
-
 (* define new notation *)
 Notation "x && y" := (andb x y).
 Notation "x || y" := (orb x y).
-
-Example test_orb5: false || false || true = true.
-Proof. simpl. reflexivity. Qed.
 
 (* Exercise: 1. standard (nandb) *)
 
 Definition nandb (b1 : bool) (b2 : bool) : bool :=
   negb (andb b1 b2).
 
-(* Truth table for NAND *)
-Example test_nandb1: (nandb true false) = true.
-Proof. simpl. reflexivity. Qed.
-
-Example test_nandb2: (nandb false false) = true.
-Proof. simpl. reflexivity. Qed.
-
-Example test_nandb3: (nandb false true) = true.
-Proof. simpl. reflexivity. Qed.
-
-Example test_nandb4: (nandb true true) = false.
-Proof. simpl. reflexivity. Qed.
-
 (* Exercise: 2. standard (andb3) *)
 
 Definition andb3 (b1 : bool) (b2 : bool) (b3 : bool) : bool :=
   andb (andb b1 b2) b3.
 
-(* Truth table for 3xAND *)
-Example test_andb31: (andb3 true true true) = true.
-Proof. simpl. reflexivity. Qed.
-
-Example test_andb32: (andb3 false true true) = false.
-Proof. simpl. reflexivity. Qed.
-
-Example test_andb33: (andb3 true false true) = false.
-Proof. simpl. reflexivity. Qed.
-
-Example test_andb34: (andb3 true true false) = false.
-Proof. simpl. reflexivity. Qed.
-
 (** Inductives *)
 (* note: Inductive constructor can take in argument *)
-
-Inductive rgb : Type :=
-  | red
-  | green
-  | blue.
-
-Inductive color : Type :=
-  | black
-  | white
-  | primary (p : rgb).
-
-Definition monochrome (c : color) : bool :=
-  match c with
-  | black => true
-  | white => true
-  | primary q => false
-  end.
-
-Definition isred (c : color) : bool :=
-  match c with
-  | black => false
-  | white => false
-  | primary red => true
-  | primary _ => false
-  end.
 
 Inductive bit : Type :=
   | b0
@@ -141,18 +50,6 @@ Inductive nibble : Type :=
 
 (* is nibble *)
 (* Check (bits b1 b0 b1 b0). *)
-
-Definition all_zero (nb : nibble) : bool :=
-  match nb with
-  | (bits b0 b0 b0 b0) => true
-  | (bits _ _ _ _ ) => false
-  end.
-
-(* False *)
-(* Compute (all_zero (bits b1 b0 b1 b0)). *)
-
-(* True *)
-(* Compute (all_zero (bits b0 b0 b0 b0)). *)
 
 (* Peano natural unary numbers *)
 
@@ -173,21 +70,6 @@ End NatPlayground.
 (* print peano format into decimal (doesn't work in our NatPlayground *)
 (* Check (S (S (S (S O)))). *)
 
-Definition minustwo (n : nat) : nat :=
-  match n with
-  | O => O
-  | S O => O
-  | S (S n') => n'
-  end.
-
-(* Compute (minustwo 4). *)
-
-(*
-Check S.
-Check pred.
-Check minustwo.
-*)
-
 (** Recursion *)
 
 (* Fixpoint is generic primitive recursion keyword *)
@@ -199,12 +81,6 @@ Fixpoint evenb (n : nat) : bool :=
   end.
 
 Definition oddb (n : nat) : bool := negb (evenb n).
-
-Example test_oddb1: oddb 1 = true.
-Proof. simpl. reflexivity. Qed.
-
-Example test_oddb2: oddb 4 = false.
-Proof. simpl. reflexivity. Qed.
 
 Module NatPlayground2.
 
@@ -272,20 +148,6 @@ Notation "x * y" := (mult x y)
 
 (* Check ((0 + 1) + 1). *)
 
-(* from book
-Fixpoint eqb (n m : nat) : bool :=
-  match n with
-  | O => match m with
-          | O => true
-          | S m' => false
-          end
-  | S n' => match m with
-            | O => false
-            | S m' => eqb n' m'
-            end
-  end.
-*)
-
 Fixpoint eqb (n m : nat) : bool :=
   match n, m with
   | O , O => true
@@ -299,18 +161,6 @@ Proof. simpl. reflexivity. Qed.
 
 Example test_eqb2: (eqb 3 4) = false.
 Proof. simpl. reflexivity. Qed.
-
-(* from book
-Fixpoint leb (n m : nat) : bool :=
-  match n with
-  | O => true
-  | S n' =>
-      match m with
-      | O => false
-      | S m' => leb n' m'
-      end
-  end.
-*)
 
 Fixpoint leb (n m : nat) : bool :=
   match n, m with
