@@ -409,28 +409,56 @@ Inductive bin : Type :=
   | A (n : bin)
   | B (n : bin).
 
-(*
-
-Fixpoint incr (m : bin) : bin :=
+Fixpoint incr_bin (m : bin) : bin :=
   match m with
   | Z => B Z
   | A Z => Z
   | B Z => A (B Z)
-  | A (B Z) => B (B Z)
-  | B (B n') => A (A (B n'))
-  | B (A n') => A (B n')
   | A (A m') => B (A m')
+  | B (A m') => A (B m')
   | A (B m') => B (B m')
+  | B (B m') => A (A (incr_bin m'))
   end.
 
-Compute Z.
-Compute incr Z.
-Compute (incr (incr Z)).
-Compute (incr (incr (incr Z))).
-Compute (incr (incr (incr (incr Z)))).
-Compute (incr (incr (incr (incr (incr Z))))).
-Compute (incr (incr (incr (incr (incr (incr Z)))))).
-Compute (incr (incr (incr (incr (incr (incr (incr Z))))))).
-Compute (incr (incr (incr (incr (incr (incr (incr (incr Z)))))))).
+Fixpoint incr_nat (n : nat) : nat :=
+  match n with
+  | O => S O
+  | S n' => S (S n')
+  end.
+
+Fixpoint bin_to_nat (m : bin) : nat :=
+  match m with
+  | Z => 0
+  | B Z => 1
+  | A m' => 2 * (bin_to_nat m')
+  | B m' => 1 + 2 * (bin_to_nat m')
+  end.
+
+(*
+Compute (incr_nat (bin_to_nat (B (B (B (B Z)))))).
+Compute (bin_to_nat (incr_bin (B (B (B (B Z)))))).
+
+Compute (incr_nat (bin_to_nat (B (B (B Z))))).
+Compute (bin_to_nat (incr_bin (B (B (B Z))))).
 *)
+
+Example test_bin_incr1:
+  bin_to_nat (incr_bin (B (B (B (B Z))))) = incr_nat (bin_to_nat (B (B (B (B Z))))).
+Proof. reflexivity. Qed.
+
+Example test_bin_incr2:
+  bin_to_nat (incr_bin (B (B (B (B (B Z)))))) = incr_nat (bin_to_nat (B (B (B (B (B Z)))))).
+Proof. reflexivity. Qed.
+
+Example test_bin_incr3:
+  bin_to_nat (incr_bin (B (A (B (B (B Z)))))) = incr_nat (bin_to_nat (B (A (B (B (B Z)))))).
+Proof. reflexivity. Qed.
+
+Example test_bin_incr4:
+  bin_to_nat (incr_bin (B (B (A (B (A (B Z))))))) = incr_nat (bin_to_nat (B (B (A (B (A (B Z))))))).
+Proof. reflexivity. Qed.
+
+Example test_bin_incr5:
+  bin_to_nat (incr_bin (A (B (A (B (A (A Z))))))) = incr_nat (bin_to_nat (A (B (A (B (A (A Z))))))).
+Proof. reflexivity. Qed.
 
