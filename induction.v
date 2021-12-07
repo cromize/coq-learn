@@ -31,18 +31,16 @@ Theorem mult_0_r : forall n : nat,
 Proof.
   induction n as [| n' IHn'].
   - reflexivity.
-  - simpl. rewrite -> IHn'. reflexivity. Qed.
+  - simpl. rewrite IHn'. reflexivity. Qed.
 
 Theorem plus_n_Sm : forall n m : nat,
   S (n + m) = n + (S m).
 Proof.
   induction n as [| n' IHn'].
-  - induction m as [| m' IHm'].
-    + reflexivity.
-    + reflexivity.
-  - induction m as [| m' Ihm'].
-    + simpl. rewrite <- IHn'. reflexivity.
-    + simpl. rewrite -> IHn'. reflexivity.
+  - reflexivity.
+  - simpl. induction m as [| m' IHm'].
+    + rewrite IHn'. reflexivity.
+    + rewrite IHn'. reflexivity.
 Qed.
 
 Theorem plus_comm : forall n m : nat,
@@ -51,32 +49,22 @@ Proof.
   induction n as [| n' IHn'].
   - induction m as [| m' IHm'].
     + reflexivity.
-    + simpl. rewrite <- IHm'. reflexivity.
-  - induction m as [| m' IHm'].
-    + simpl. rewrite -> IHn'. reflexivity.
-    + simpl. rewrite -> IHn'.
-      simpl. rewrite <- IHm'.
-      rewrite <- IHn'. reflexivity.
+    + rewrite <- plus_n_O. reflexivity.
+  - simpl. induction m as [| m' IHm'].
+    + rewrite IHn'. reflexivity.
+    + rewrite IHn'. rewrite plus_n_Sm. reflexivity.
 Qed.
 
 Theorem plus_assoc : forall n m p : nat,
   n + (m + p) = (n + m) + p.
 Proof.
   induction n as [| n' IHn'].
-  - induction m as [| m' IHm'].
-    + induction p as [| p' IHp'].
-      * reflexivity.
-      * reflexivity.
-    + induction p as [| p' IHp'].
-      * reflexivity.
-      * reflexivity.
-  - induction m as [| m' IHm'].
-    + induction p as [| p' IHp'].
-      * simpl. rewrite <- IHn'. reflexivity.
-      * simpl. rewrite <- IHn'. reflexivity.
-    + induction p as [| p' IHp'].
-      * simpl. rewrite <- IHn'. reflexivity.
-      * simpl. rewrite <- IHn'. reflexivity.
+  - reflexivity.
+  - simpl. induction m as [| m' IHm'].
+    + rewrite <- plus_n_O. reflexivity.
+    + simpl. rewrite <- plus_n_Sm. induction p as [| p' IHp'].
+      * rewrite <- plus_n_Sm. rewrite IHn'. reflexivity.
+      * rewrite <- plus_n_Sm. rewrite IHn'. reflexivity.
 Qed.
 
 (* Exercise 2. standard (double_plus) *)
@@ -92,6 +80,14 @@ Proof.
   induction n as [| n' IHn'].
   - reflexivity.
   - simpl. rewrite plus_comm.
-    simpl. rewrite -> IHn'.
-    reflexivity.
+    rewrite IHn'. reflexivity.
 Qed.
+
+(* Exercise 3. standard (evenb_S) *)
+
+Theorem evenb_S : forall n : nat,
+  evenb (S n) = negb (evenb n).
+Proof.
+  simpl.
+  Show.
+  
